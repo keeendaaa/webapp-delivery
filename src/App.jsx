@@ -148,7 +148,7 @@ const ScanScreenWrapper = styled.div`
   left: 0; right: 0; top: 0; bottom: 64px;
   width: 100vw;
   height: auto;
-  background: rgba(0,0,0,0.7);
+  background: none;
   z-index: 200;
   display: flex;
   flex-direction: column;
@@ -161,7 +161,7 @@ const CameraView = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
+  background: none;
   position: relative;
 `;
 const ScanFrame = styled.div`
