@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
-import QrReader from 'react-qr-reader';
+import Webcam from 'react-webcam';
+import jsQR from 'jsqr';
 import L from 'leaflet';
 
 const Wrapper = styled.div`
@@ -210,18 +211,45 @@ const FlashButton = styled.button`
 `;
 
 function ScanScreen({ onResult }) {
+  const webcamRef = useRef(null);
   const [qrError, setQrError] = useState(null);
+
+  const scan = useCallback(() => {
+    if (!webcamRef.current) return;
+    const imageSrc = webcamRef.current.getScreenshot();
+    if (!imageSrc) return;
+    const img = new window.Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+      const imageData = ctx.getImageData(0, 0, img.width, img.height);
+      const code = jsQR(imageData.data, img.width, img.height);
+      if (code) {
+        onResult(code.data);
+      }
+    };
+    img.onerror = () => setQrError('Ошибка обработки изображения');
+    img.src = imageSrc;
+  }, [onResult]);
+
+  useEffect(() => {
+    const interval = setInterval(scan, 500);
+    return () => clearInterval(interval);
+  }, [scan]);
+
   return (
     <ScanScreenWrapper>
       <CameraView>
         <div style={{ width: 220, height: 220, position: 'relative' }}>
-          <QrReader
-            delay={300}
-            onError={err => setQrError('Ошибка камеры: ' + err)}
-            onScan={data => {
-              if (data) onResult(data);
-            }}
-            style={{ width: '100%', height: '100%' }}
+          <Webcam
+            audio={false}
+            ref={webcamRef}
+            screenshotFormat="image/png"
+            videoConstraints={{ facingMode: 'environment' }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 24 }}
           />
           <img
             src={`${import.meta.env.BASE_URL || '/'}images/scan-frame.png`}
