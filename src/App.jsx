@@ -279,12 +279,14 @@ function App() {
     popupAnchor: [0, -40],
   });
 
-  // Прозрачный фон body и Wrapper только при активном сканере
+  const [scanIcon, setScanIcon] = useState(`${base}images/scan-white.png`);
+
+  // Прозрачный фон body, #root и Wrapper только при активном сканере
   useEffect(() => {
     if (activeTab === 'scan') {
-      document.body.style.background = 'none';
+      document.body.style.setProperty('background', 'none', 'important');
       const root = document.getElementById('root');
-      if (root) root.style.background = 'none';
+      if (root) root.style.setProperty('background', 'none', 'important');
     } else {
       document.body.style.background = '';
       const root = document.getElementById('root');
@@ -297,8 +299,18 @@ function App() {
     };
   }, [activeTab]);
 
+  // Проверка наличия scan-white.png, если нет — fallback на scan.png
+  useEffect(() => {
+    if (activeTab === 'scan') {
+      const img = new window.Image();
+      img.onload = () => setScanIcon(`${base}images/scan-white.png`);
+      img.onerror = () => setScanIcon(`${base}images/scan.png`);
+      img.src = `${base}images/scan-white.png`;
+    }
+  }, [activeTab, base]);
+
   return (
-    <Wrapper transparent={activeTab === 'scan'}>
+    <Wrapper transparent={activeTab === 'scan'} style={activeTab === 'scan' ? { background: 'none', backgroundColor: 'transparent' } : {}}>
       {activeTab === 'scan' && <ScanScreen onResult={text => { setQrResult(text); setActiveTab('home'); }} />}
       {activeTab === 'home' && (
         <>
@@ -348,7 +360,7 @@ function App() {
           <img src={`${base}images/home.png`} alt="Домой" />
         </NavIcon>
         <NavIcon center active={activeTab === 'scan'} onClick={() => setActiveTab('scan')}>
-          <img src={activeTab === 'scan' ? `${base}images/scan-white.png` : `${base}images/scan.png`} alt="Сканер" />
+          <img src={activeTab === 'scan' ? scanIcon : `${base}images/scan.png`} alt="Сканер" />
         </NavIcon>
         <NavIcon active={activeTab === 'chat'} onClick={() => setActiveTab('chat')}>
           <img src={`${base}images/chat.png`} alt="Чат" />
