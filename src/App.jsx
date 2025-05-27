@@ -154,6 +154,7 @@ const ScanScreenWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 0;
 `;
 const CameraView = styled.div`
   flex: 1;
@@ -163,6 +164,7 @@ const CameraView = styled.div`
   justify-content: center;
   background: none;
   position: relative;
+  padding: 0;
 `;
 const ScanFrame = styled.div`
   position: absolute;
@@ -243,18 +245,18 @@ function ScanScreen({ onResult }) {
   return (
     <ScanScreenWrapper>
       <CameraView>
-        <div style={{ width: 220, height: 220, position: 'relative' }}>
+        <div style={{ width: 220, height: 220, position: 'relative', background: 'none', padding: 0, margin: 0 }}>
           <Webcam
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/png"
             videoConstraints={{ facingMode: 'environment' }}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 24 }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', background: 'none', padding: 0, margin: 0 }}
           />
           <img
             src={`${import.meta.env.BASE_URL || '/'}images/scan-frame.png`}
             alt="scan frame"
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', borderRadius: 24 }}
           />
         </div>
       </CameraView>
