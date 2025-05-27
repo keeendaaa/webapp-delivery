@@ -113,7 +113,7 @@ const BottomNav = styled.div`
   justify-content: space-around;
   align-items: center;
   height: 64px;
-  z-index: 100;
+  z-index: 200;
 `;
 const NavIcon = styled.div`
   width: ${props => props.center ? '48px' : '32px'};
@@ -149,7 +149,7 @@ const ScanScreenWrapper = styled.div`
   width: 100vw;
   height: auto;
   background: none;
-  z-index: 99;
+  z-index: 150;
   display: flex;
   flex-direction: column;
   align-items: center;
