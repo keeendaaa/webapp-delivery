@@ -245,7 +245,7 @@ function ScanScreen({ onResult }) {
   return (
     <ScanScreenWrapper>
       <CameraView>
-        <div id={id} ref={qrRef} style={{ width: 220, height: 220, background: 'transparent', borderRadius: 24, position: 'relative' }} />
+        <div id={id} ref={qrRef} style={{ width: 220, height: 220, background: 'red', border: '2px solid yellow', borderRadius: 24, position: 'relative', zIndex: 200 }} />
         <img src={`${import.meta.env.BASE_URL || '/'}images/scan-frame.png`} alt="scan frame" style={{ position: 'absolute', top: '50%', left: '50%', width: 220, height: 220, transform: 'translate(-50%, -50%)', pointerEvents: 'none' }} />
       </CameraView>
     </ScanScreenWrapper>
