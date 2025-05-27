@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
-import { Html5Qrcode } from 'html5-qrcode';
+import QrReader from 'react-qr-reader';
 import L from 'leaflet';
 
 const Wrapper = styled.div`
@@ -147,8 +147,7 @@ const ScanScreenWrapper = styled.div`
   position: fixed;
   left: 0; right: 0; top: 0; bottom: 64px;
   width: 100vw;
-  min-height: 300px;
-  background: lime;
+  background: none;
   z-index: 150;
   display: flex;
   flex-direction: column;
@@ -161,7 +160,7 @@ const CameraView = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: blue;
+  background: none;
   position: relative;
 `;
 const ScanFrame = styled.div`
@@ -211,43 +210,27 @@ const FlashButton = styled.button`
 `;
 
 function ScanScreen({ onResult }) {
-  const qrRef = useRef();
-  const id = 'qr-reader-' + Math.random().toString(36).slice(2, 10);
-  useEffect(() => {
-    let qr;
-    let timeout;
-    function startQr() {
-      if (!document.getElementById(id)) {
-        timeout = setTimeout(startQr, 100);
-        return;
-      }
-      qr = new Html5Qrcode(id);
-      qr.start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 220, height: 220 } },
-        (decodedText) => {
-          onResult(decodedText);
-          qr.stop();
-        },
-        (error) => {
-          // Можно добавить вывод ошибки
-        }
-      ).catch((err) => {
-        alert('Ошибка доступа к камере или инициализации QR: ' + err);
-      });
-    }
-    startQr();
-    return () => {
-      if (qr) qr.stop().catch(() => {});
-      if (timeout) clearTimeout(timeout);
-    };
-  }, [onResult, id]);
+  const [qrError, setQrError] = useState(null);
   return (
     <ScanScreenWrapper>
       <CameraView>
-        <div id={id} ref={qrRef} style={{ width: 220, height: 220, background: 'red', border: '2px solid yellow', borderRadius: 24, position: 'relative', zIndex: 200 }} />
-        <img src={`${import.meta.env.BASE_URL || '/'}images/scan-frame.png`} alt="scan frame" style={{ position: 'absolute', top: '50%', left: '50%', width: 220, height: 220, transform: 'translate(-50%, -50%)', pointerEvents: 'none' }} />
+        <div style={{ width: 220, height: 220, position: 'relative' }}>
+          <QrReader
+            delay={300}
+            onError={err => setQrError('Ошибка камеры: ' + err)}
+            onScan={data => {
+              if (data) onResult(data);
+            }}
+            style={{ width: '100%', height: '100%' }}
+          />
+          <img
+            src={`${import.meta.env.BASE_URL || '/'}images/scan-frame.png`}
+            alt="scan frame"
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
+          />
+        </div>
       </CameraView>
+      {qrError && <div style={{color: 'red', marginTop: 16}}>{qrError}</div>}
     </ScanScreenWrapper>
   );
 }
