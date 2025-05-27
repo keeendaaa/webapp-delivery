@@ -146,25 +146,23 @@ const NavIcon = styled.div`
 `;
 const ScanScreenWrapper = styled.div`
   position: fixed;
-  left: 0; right: 0; top: 0; bottom: 64px;
+  left: 0; right: 0; top: 0; bottom: 0;
   width: 100vw;
+  height: 100vh;
   background: none;
   z-index: 150;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 0;
 `;
 const CameraView = styled.div`
-  flex: 1;
   width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 100vh;
   background: none;
   position: relative;
   padding: 0;
+  margin: 0;
 `;
 const ScanFrame = styled.div`
   position: absolute;
@@ -245,22 +243,39 @@ function ScanScreen({ onResult }) {
   return (
     <ScanScreenWrapper>
       <CameraView>
-        <div style={{ width: 220, height: 220, position: 'relative', background: 'none', padding: 0, margin: 0 }}>
-          <Webcam
-            audio={false}
-            ref={webcamRef}
-            screenshotFormat="image/png"
-            videoConstraints={{ facingMode: 'environment' }}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', background: 'none', padding: 0, margin: 0 }}
-          />
-          <img
-            src={`${import.meta.env.BASE_URL || '/'}images/scan-frame.png`}
-            alt="scan frame"
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', borderRadius: 24 }}
-          />
-        </div>
+        <Webcam
+          audio={false}
+          ref={webcamRef}
+          screenshotFormat="image/png"
+          videoConstraints={{ facingMode: 'environment' }}
+          style={{
+            width: '100vw',
+            height: '100vh',
+            objectFit: 'cover',
+            background: 'none',
+            padding: 0,
+            margin: 0,
+            position: 'absolute',
+            left: 0,
+            top: 0,
+          }}
+        />
+        <img
+          src={`${import.meta.env.BASE_URL || '/'}images/scan-frame.png`}
+          alt="scan frame"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: 220,
+            height: 220,
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none',
+            borderRadius: 24,
+          }}
+        />
       </CameraView>
-      {qrError && <div style={{color: 'red', marginTop: 16}}>{qrError}</div>}
+      {qrError && <div style={{ color: 'red', marginTop: 16 }}>{qrError}</div>}
     </ScanScreenWrapper>
   );
 }
@@ -301,6 +316,23 @@ function App() {
       img.src = `${base}images/scan-white.png`;
     }
   }, [activeTab, base]);
+
+  useEffect(() => {
+    if (activeTab === 'scan') {
+      document.body.style.background = 'none';
+      const root = document.getElementById('root');
+      if (root) root.style.background = 'none';
+    } else {
+      document.body.style.background = '';
+      const root = document.getElementById('root');
+      if (root) root.style.background = '';
+    }
+    return () => {
+      document.body.style.background = '';
+      const root = document.getElementById('root');
+      if (root) root.style.background = '';
+    };
+  }, [activeTab]);
 
   return (
     <Wrapper>
