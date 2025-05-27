@@ -148,7 +148,7 @@ const ScanScreenWrapper = styled.div`
   left: 0; right: 0; top: 0; bottom: 64px;
   width: 100vw;
   height: auto;
-  background: #222;
+  background: transparent;
   z-index: 200;
   display: flex;
   flex-direction: column;
@@ -161,7 +161,7 @@ const CameraView = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #000;
+  background: transparent;
   position: relative;
 `;
 const ScanFrame = styled.div`
@@ -246,7 +246,7 @@ function ScanScreen({ onResult }) {
     <ScanScreenWrapper>
       <CameraView>
         <div id={id} ref={qrRef} style={{ width: 220, height: 220, background: 'transparent', borderRadius: 24, position: 'relative' }} />
-        <img src="/images/scan-frame.png" alt="scan frame" style={{ position: 'absolute', top: '50%', left: '50%', width: 220, height: 220, transform: 'translate(-50%, -50%)', pointerEvents: 'none' }} />
+        <img src="images/scan-frame.png" alt="scan frame" style={{ position: 'absolute', top: '50%', left: '50%', width: 220, height: 220, transform: 'translate(-50%, -50%)', pointerEvents: 'none' }} />
       </CameraView>
     </ScanScreenWrapper>
   );
@@ -272,7 +272,7 @@ function App() {
     [56.838645, 60.607796],
   ];
   const postomatIcon = new L.Icon({
-    iconUrl: '/images/postomat-marker.png',
+    iconUrl: 'images/postomat-marker.png',
     iconSize: [40, 40],
     iconAnchor: [20, 40],
     popupAnchor: [0, -40],
@@ -281,54 +281,58 @@ function App() {
   return (
     <Wrapper>
       {activeTab === 'scan' && <ScanScreen onResult={text => { setQrResult(text); setActiveTab('home'); }} />}
-      <Header>
-        <Logo>
-          <img src="/images/logo.png" alt="Логотип" />
-        </Logo>
-      </Header>
-      <Greeting>
-        Добрый день Екатерина,<br />
-        <span>Что закажем сегодня?</span>
-      </Greeting>
-      <OrderCard>
-        <OrderRow>
-          <OrderImg>
-            <img src="/images/avatar.png" alt="Аватар" />
-          </OrderImg>
-          <OrderInfo>
-            <OrderTitle>Arduino набор</OrderTitle>
-            <OrderDesc>Ваша посылка</OrderDesc>
-          </OrderInfo>
-          <svg width="24" height="24"><polyline points="8,6 16,12 8,18" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        </OrderRow>
-        <OrderDetails>
-          <span>📅 Среда, 21 мая</span>
-          <span>🕒 11:00 – 12:00 Утра</span>
-        </OrderDetails>
-      </OrderCard>
-      <SearchBarWrapper>
-        <SearchBar placeholder="Поищем что-нибудь новое?" />
-      </SearchBarWrapper>
-      <MapBlock>
-        <MapTitle>Ближайший постомат в 40 минутах от вас</MapTitle>
-        <StyledMap>
-          <MapContainer center={postomats[0]} zoom={12} style={{ height: '180px', width: '100%' }} scrollWheelZoom={false} dragging={false} zoomControl={false} doubleClickZoom={false} attributionControl={false}>
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {postomats.map((pos, idx) => (
-              <Marker key={idx} position={pos} icon={postomatIcon} />
-            ))}
-          </MapContainer>
-        </StyledMap>
-      </MapBlock>
+      {activeTab === 'home' && (
+        <>
+          <Header>
+            <Logo>
+              <img src="images/logo.png" alt="Логотип" />
+            </Logo>
+          </Header>
+          <Greeting>
+            Добрый день Екатерина,<br />
+            <span>Что закажем сегодня?</span>
+          </Greeting>
+          <OrderCard>
+            <OrderRow>
+              <OrderImg>
+                <img src="images/avatar.png" alt="Аватар" />
+              </OrderImg>
+              <OrderInfo>
+                <OrderTitle>Arduino набор</OrderTitle>
+                <OrderDesc>Ваша посылка</OrderDesc>
+              </OrderInfo>
+              <svg width="24" height="24"><polyline points="8,6 16,12 8,18" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </OrderRow>
+            <OrderDetails>
+              <span>📅 Среда, 21 мая</span>
+              <span>🕒 11:00 – 12:00 Утра</span>
+            </OrderDetails>
+          </OrderCard>
+          <SearchBarWrapper>
+            <SearchBar placeholder="Поищем что-нибудь новое?" />
+          </SearchBarWrapper>
+          <MapBlock>
+            <MapTitle>Ближайший постомат в 40 минутах от вас</MapTitle>
+            <StyledMap>
+              <MapContainer center={postomats[0]} zoom={12} style={{ height: '180px', width: '100%' }} scrollWheelZoom={false} dragging={false} zoomControl={false} doubleClickZoom={false} attributionControl={false}>
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                {postomats.map((pos, idx) => (
+                  <Marker key={idx} position={pos} icon={postomatIcon} />
+                ))}
+              </MapContainer>
+            </StyledMap>
+          </MapBlock>
+        </>
+      )}
       <BottomNav>
         <NavIcon active={activeTab === 'home'} onClick={() => setActiveTab('home')}>
-          <img src="/images/home.png" alt="Домой" />
+          <img src="images/home.png" alt="Домой" />
         </NavIcon>
         <NavIcon center active={activeTab === 'scan'} onClick={() => setActiveTab('scan')}>
-          <img src={activeTab === 'scan' ? '/images/scan-white.png' : '/images/scan.png'} alt="Сканер" />
+          <img src={activeTab === 'scan' ? 'images/scan-white.png' : 'images/scan.png'} alt="Сканер" />
         </NavIcon>
         <NavIcon active={activeTab === 'chat'} onClick={() => setActiveTab('chat')}>
-          <img src="/images/chat.png" alt="Чат" />
+          <img src="images/chat.png" alt="Чат" />
         </NavIcon>
       </BottomNav>
     </Wrapper>
