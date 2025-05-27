@@ -279,6 +279,18 @@ function App() {
     popupAnchor: [0, -40],
   });
 
+  // Прозрачный фон body только при активном сканере
+  useEffect(() => {
+    if (activeTab === 'scan') {
+      document.body.style.background = 'none';
+    } else {
+      document.body.style.background = '';
+    }
+    return () => {
+      document.body.style.background = '';
+    };
+  }, [activeTab]);
+
   return (
     <Wrapper>
       {activeTab === 'scan' && <ScanScreen onResult={text => { setQrResult(text); setActiveTab('home'); }} />}
