@@ -148,7 +148,7 @@ const ScanScreenWrapper = styled.div`
   left: 0; right: 0; top: 0; bottom: 64px;
   width: 100vw;
   height: auto;
-  background: transparent;
+  background: rgba(0,0,0,0.7);
   z-index: 200;
   display: flex;
   flex-direction: column;
@@ -246,7 +246,7 @@ function ScanScreen({ onResult }) {
     <ScanScreenWrapper>
       <CameraView>
         <div id={id} ref={qrRef} style={{ width: 220, height: 220, background: 'transparent', borderRadius: 24, position: 'relative' }} />
-        <img src="images/scan-frame.png" alt="scan frame" style={{ position: 'absolute', top: '50%', left: '50%', width: 220, height: 220, transform: 'translate(-50%, -50%)', pointerEvents: 'none' }} />
+        <img src={`${import.meta.env.BASE_URL || '/'}images/scan-frame.png`} alt="scan frame" style={{ position: 'absolute', top: '50%', left: '50%', width: 220, height: 220, transform: 'translate(-50%, -50%)', pointerEvents: 'none' }} />
       </CameraView>
     </ScanScreenWrapper>
   );
@@ -271,8 +271,9 @@ function App() {
     [56.844214, 60.700890],
     [56.838645, 60.607796],
   ];
+  const base = import.meta.env.BASE_URL || '/';
   const postomatIcon = new L.Icon({
-    iconUrl: 'images/postomat-marker.png',
+    iconUrl: `${base}images/postomat-marker.png`,
     iconSize: [40, 40],
     iconAnchor: [20, 40],
     popupAnchor: [0, -40],
@@ -285,7 +286,7 @@ function App() {
         <>
           <Header>
             <Logo>
-              <img src="images/logo.png" alt="Логотип" />
+              <img src={`${base}images/logo.png`} alt="Логотип" />
             </Logo>
           </Header>
           <Greeting>
@@ -295,7 +296,7 @@ function App() {
           <OrderCard>
             <OrderRow>
               <OrderImg>
-                <img src="images/avatar.png" alt="Аватар" />
+                <img src={`${base}images/avatar.png`} alt="Аватар" />
               </OrderImg>
               <OrderInfo>
                 <OrderTitle>Arduino набор</OrderTitle>
@@ -326,13 +327,13 @@ function App() {
       )}
       <BottomNav>
         <NavIcon active={activeTab === 'home'} onClick={() => setActiveTab('home')}>
-          <img src="images/home.png" alt="Домой" />
+          <img src={`${base}images/home.png`} alt="Домой" />
         </NavIcon>
         <NavIcon center active={activeTab === 'scan'} onClick={() => setActiveTab('scan')}>
-          <img src={activeTab === 'scan' ? 'images/scan-white.png' : 'images/scan.png'} alt="Сканер" />
+          <img src={activeTab === 'scan' ? `${base}images/scan-white.png` : `${base}images/scan.png`} alt="Сканер" />
         </NavIcon>
         <NavIcon active={activeTab === 'chat'} onClick={() => setActiveTab('chat')}>
-          <img src="images/chat.png" alt="Чат" />
+          <img src={`${base}images/chat.png`} alt="Чат" />
         </NavIcon>
       </BottomNav>
     </Wrapper>
