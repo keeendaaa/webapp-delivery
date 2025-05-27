@@ -8,7 +8,7 @@ const Wrapper = styled.div`
   min-height: 100vh;
   width: 100%;
   margin: 0;
-  background: ${props => props.transparent ? 'none' : '#fff'};
+  background: #fff;
   font-family: 'Inter', Arial, sans-serif;
   overflow-x: hidden;
 `;
@@ -144,12 +144,12 @@ const NavIcon = styled.div`
   }
 `;
 const ScanScreenWrapper = styled.div`
-  position: absolute;
+  position: fixed;
   left: 0; right: 0; top: 0; bottom: 64px;
   width: 100vw;
   height: auto;
   background: none;
-  z-index: 200;
+  z-index: 99;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -280,26 +280,6 @@ function App() {
   });
 
   const [scanIcon, setScanIcon] = useState(`${base}images/scan-white.png`);
-
-  // Прозрачный фон body, #root и Wrapper только при активном сканере
-  useEffect(() => {
-    if (activeTab === 'scan') {
-      document.body.style.setProperty('background', 'none', 'important');
-      const root = document.getElementById('root');
-      if (root) root.style.setProperty('background', 'none', 'important');
-    } else {
-      document.body.style.background = '';
-      const root = document.getElementById('root');
-      if (root) root.style.background = '';
-    }
-    return () => {
-      document.body.style.background = '';
-      const root = document.getElementById('root');
-      if (root) root.style.background = '';
-    };
-  }, [activeTab]);
-
-  // Проверка наличия scan-white.png, если нет — fallback на scan.png
   useEffect(() => {
     if (activeTab === 'scan') {
       const img = new window.Image();
@@ -310,7 +290,7 @@ function App() {
   }, [activeTab, base]);
 
   return (
-    <Wrapper transparent={activeTab === 'scan'} style={activeTab === 'scan' ? { background: 'none', backgroundColor: 'transparent' } : {}}>
+    <Wrapper>
       {activeTab === 'scan' && <ScanScreen onResult={text => { setQrResult(text); setActiveTab('home'); }} />}
       {activeTab === 'home' && (
         <>
