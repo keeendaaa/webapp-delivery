@@ -8,7 +8,7 @@ const Wrapper = styled.div`
   min-height: 100vh;
   width: 100%;
   margin: 0;
-  background: #fff;
+  background: ${props => props.transparent ? 'none' : '#fff'};
   font-family: 'Inter', Arial, sans-serif;
   overflow-x: hidden;
 `;
@@ -279,20 +279,26 @@ function App() {
     popupAnchor: [0, -40],
   });
 
-  // Прозрачный фон body только при активном сканере
+  // Прозрачный фон body и Wrapper только при активном сканере
   useEffect(() => {
     if (activeTab === 'scan') {
       document.body.style.background = 'none';
+      const root = document.getElementById('root');
+      if (root) root.style.background = 'none';
     } else {
       document.body.style.background = '';
+      const root = document.getElementById('root');
+      if (root) root.style.background = '';
     }
     return () => {
       document.body.style.background = '';
+      const root = document.getElementById('root');
+      if (root) root.style.background = '';
     };
   }, [activeTab]);
 
   return (
-    <Wrapper>
+    <Wrapper transparent={activeTab === 'scan'}>
       {activeTab === 'scan' && <ScanScreen onResult={text => { setQrResult(text); setActiveTab('home'); }} />}
       {activeTab === 'home' && (
         <>
